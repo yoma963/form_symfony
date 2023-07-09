@@ -16,20 +16,28 @@ class FormController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $question = new Question();
-
+        
         $form = $this->createForm(QuestionFormType::class, $question);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if($form->isValid()) {
-                $entityManager->persist($question);
-                $entityManager->flush();
+                if (filter_var($question->getEmail(), FILTER_VALIDATE_EMAIL)) {
+                    $entityManager->persist($question);
+                    $entityManager->flush();
 
-                $this->addFlash('success', "Köszönjük szépen a kérdésedet. Válaszunkkal hamarosan keresünk a megadott e-mail címen.");
-                return $this->redirectToRoute('app_form');
+                    $this->addFlash(
+                        'success', 
+                        'Köszönjük szépen a kérdésedet. Válaszunkkal hamarosan keresünk a megadott e-mail címen.'
+                    );
+                    return $this->redirectToRoute('app_form');
+                }
+                else {
+                    $this->addFlash('fail', 'Hibás e-mail cím.');
+                }
             }
             else {
-                $this->addFlash('fail', "Hiba! Kérjük töltsd ki az összes mezőt!");
+                $this->addFlash('fail', 'Hiba! Kérjük töltsd ki az összes mezőt!');
             }
         }
 
