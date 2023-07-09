@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center mt-5">
+        <div class="form col-8 col-md-6 p-4" style="border: solid #ced4da 1px; border-radius: 10px">
+            <h1 class="text-center display-4 my-3">Contact Form</h1>
+            {{ form(question_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        </div>
+    </div>
+{% endblock %}
